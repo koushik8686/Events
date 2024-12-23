@@ -32,7 +32,7 @@ const SecondPg = () => {
         </header>
   
         {/* Content */}
-        <div className="px-8 relative z-10">
+        <div className="px-8 relative z-10 w-100">
           <Section
             title="Technical Clubs"
             items={technicalClubs}

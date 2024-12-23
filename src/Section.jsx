@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./index_r.css";
 import Card from "./Card";
@@ -6,7 +6,24 @@ import Card from "./Card";
 const Section = ({ title, items, color }) => {
 
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3;
+  const [itemsPerPage, setItemsPerPage] = useState(3); // Default to 3 items per page
+
+  useEffect(() => {
+    // Adjust itemsPerPage based on window width
+    const updateItemsPerPage = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerPage(2); // Small screens
+      } else {
+        setItemsPerPage(3); // Larger screens
+      }
+    };
+
+    updateItemsPerPage(); // Call on component mount
+    window.addEventListener("resize", updateItemsPerPage);
+
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
+
   const totalPages = Math.ceil(items.length / itemsPerPage);
 
   const nextPage = () => {
