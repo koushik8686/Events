@@ -18,15 +18,16 @@ const Landing = () => {
           </div>
 
         {/* Gaming Controller */}
-        {/*<div className="relative min-h-screen">
+        <div className="relative min-h-screen">
           <div className="absolute flex justify-center items-center w-full h-full animate-pulse">
             <img
-            src="/assets/back.jpg"
+            src="/assets/pattern.jpg"
             alt="Gaming Controller"
-            className="w-60 h-60 top-0 left-32 transform -translate-x-1/2 z-50 relative rounded-full"
+            className="w-96 h-96 top-0 left-48 transform -translate-x-1/2 z-50 relative rounded-full"
             />
          </div>
-        </div>*/}
+        </div>
+        
         {/* Floating Icons */}
         <div className="absolute hidden md:flex flex-col space-y-4  top-1/2 left-5 animate-float">
           <img
