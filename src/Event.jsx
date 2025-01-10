@@ -157,6 +157,17 @@ export default function EventDetails() {
               </div>
             </div>
           </motion.section>
+
+          {/* Register Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full flex justify-center mt-12"
+          >
+            <button className="px-8 py-3 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition duration-300">
+              Register Now
+            </button>
+          </motion.div>
         </div>
       </div>
     </div>

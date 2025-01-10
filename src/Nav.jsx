@@ -21,7 +21,7 @@ const Nav = () => {
           {/* Centered Navigation Links */}
           <ul className=" mr-24  md:flex space-x-8 text-sm font-medium">
             <li className="hover:text-blue-500 transition duration-300">
-              <a href="#organize">Organize</a>
+              <a href="/organize">Organize</a>
             </li>
             <li className="hover:text-blue-500 transition duration-300">
               <a href="#participate">Participate</a>

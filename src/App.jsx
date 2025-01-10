@@ -7,7 +7,7 @@ import SecondPg from "./SecondPg";
 import Footer from "./Footer";
 import ClubPage from "./ClubPage";
 import EventDetails from "./Event";
-
+import AddEvent from './Organize'
 // Ensure all assets are in the public/assets folder and replace placeholder URLs with actual ones in components.
 
 function App() {
@@ -24,9 +24,9 @@ function App() {
               <Footer />
             </div>
           }/>
-     
         <Route path="club/:name" element={<ClubPage />} />
         <Route path="/event/:name" element={<EventDetails/>} />
+        <Route path="/organize" element={<AddEvent/>} />
       </Routes>
     </BrowserRouter>
   );
