@@ -46,7 +46,7 @@ const eventDetails = {
 
 export default function EventDetails() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-gray-800">
       {/* Hero Section */}
       <div className="relative h-[50vh] w-full overflow-hidden">
         <img
