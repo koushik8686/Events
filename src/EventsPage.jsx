@@ -116,19 +116,6 @@ function EventCard({
   categories,
   image,
   status,
-}: {
-  title: string
-  description: string
-  date: string
-  time: string
-  venue: string
-  teamSize: number
-  contact: string
-  price: number
-  prize: number
-  categories: string[]
-  image: string
-  status: "upcoming" | "past"
 }) {
   return (
     <div className="bg-white/5 border border-white/10 rounded-lg overflow-hidden group hover:bg-white/10 transition-all duration-300 hover:scale-[1.02]">

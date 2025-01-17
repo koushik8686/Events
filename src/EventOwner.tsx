@@ -62,7 +62,7 @@ function EventOwner() {
   <div className="flex justify-between items-center">
     {/* Back Button */}
     <a
-      href="/club/owner/clubname"
+      href="/club/Dashboard/clubname"
       className="text-white bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md text-sm"
     >
       Back

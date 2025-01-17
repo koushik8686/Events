@@ -34,7 +34,7 @@ function App() {
         <Route path="/organize" element={<AddEvent/>} />
         <Route path="/admin" element={<AdminDashboard/>} />
         <Route path="/participants" element={<Participants/>} />
-        <Route path="/club/event/:idr" element={<EventOwner/>} />
+        <Route path="/club/event/:id" element={<EventOwner/>} />
         <Route path="/club/dashboard/:name" element={<ClubDashboard/>} />
         <Route path="/events" element={<EventsPage/>} />
       </Routes>

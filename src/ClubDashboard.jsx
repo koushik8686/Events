@@ -94,12 +94,9 @@ const clubStats = [
   { label: "Active Members", value: "150+" },
   { label: "Years Active", value: "5" }
 ];
-
-type TabType = 'upcoming' | 'past' | 'requests';
-
 function ClubDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabType>('upcoming');
+  const [activeTab, setActiveTab] = useState('upcoming');
   const [showNav, setShowNav] = useState(false);
 
   useEffect(() => {
@@ -112,7 +109,7 @@ function ClubDashboard() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const groupEventsByMonth = (events: any[]) => {
+  const groupEventsByMonth = (events) => {
     const grouped = events.reduce((acc, event) => {
       const date = new Date(event.date);
       const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -126,7 +123,7 @@ function ClubDashboard() {
 
     // Sort events within each month by date
     Object.keys(grouped).forEach(month => {
-      grouped[month].sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      grouped[month].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     });
 
     return grouped;
@@ -207,9 +204,11 @@ function ClubDashboard() {
                 </div>
               )}
             </div>
+            <a href="/club/event/:abc">
             <span className="text-sm text-gray-400">
               {event.participants.length} Registered
             </span>
+            </a>
           </div>
         )}
       </div>
@@ -265,7 +264,7 @@ function ClubDashboard() {
           {/* Tabs */}
           <div className="px-6 border-t border-[#333]">
             <div className="flex gap-6">
-              {(['upcoming', 'requests', 'past'] as const).map((tab) => (
+              {(['upcoming', 'requests', 'past']).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -318,7 +317,7 @@ function ClubDashboard() {
             <div key={month} className="mb-12">
               <h2 className="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">{month}</h2>
               <div className="space-y-6">
-                {monthEvents.map((event: any) => (
+                {monthEvents.map((event) => (
                   <div key={event.id}>
                     {renderEventCard(event)}
                   </div>
