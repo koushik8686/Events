@@ -38,7 +38,7 @@ const Nav = () => {
         if (response.data.message) {
           Cookies.set("user", response.data.userId);
           setUserProfile(response.data); // Update state with user data
-          navigate("/home");
+          navigate("/events");
         }
       }
     } catch (error) {
