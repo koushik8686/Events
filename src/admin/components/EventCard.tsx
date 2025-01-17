@@ -1,5 +1,4 @@
 import React from 'react'
-import { format } from 'date-fns'
 import { Calendar, MapPin, Users, DollarSign, Star, Clock, Trophy, Phone } from 'lucide-react'
 
 interface Club {
@@ -101,7 +100,9 @@ export function EventCard({ event, onEdit, onDelete }: EventCardProps) {
         <div className="grid grid-cols-2 gap-2 mb-4">
           <div className="flex items-center text-gray-400">
             <Calendar className="h-4 w-4 mr-2 text-purple-500" />
-            <span className="text-xs">{format(new Date(event.date), 'MMM dd, yyyy')}</span>
+            <span className="text-xs">
+  {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
+</span>
           </div>
           
           <div className="flex items-center text-gray-400">
