@@ -32,7 +32,7 @@ const Nav = () => {
   const responseGoogle = async (authResult) => {
     try {
       if (authResult) {
-        const response = await axios.get(`http://localhost:5000/auth/google`, {
+        const response = await axios.get(`https://events-backend-two.vercel.app/auth/google`, {
           params: { tokens: authResult },
         });
         if (response.data.message) {
