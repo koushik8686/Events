@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { motion, useAnimation, useInView } from 'framer-motion'
 import { useRef, useEffect } from 'react'
 import { Calendar, MapPin, Clock } from 'lucide-react'
@@ -74,7 +74,7 @@ export default function ClubPage() {
   }, [inView, controls])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-gray-800">
+    <div className="min-h-screen bg-black">
       {/* Hero Section */}
       <div className="relative h-[40vh] w-full overflow-hidden">
         <img

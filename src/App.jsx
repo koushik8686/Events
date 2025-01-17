@@ -1,4 +1,4 @@
-import React from "react";
+
 import { BrowserRouter , Routes , Route} from "react-router-dom";
 import "./index_r.css";
 import Nav from "./Nav";
@@ -8,6 +8,11 @@ import Footer from "./Footer";
 import ClubPage from "./ClubPage";
 import EventDetails from "./Event";
 import AddEvent from './Organize'
+import AdminDashboard from "./admin/Dashboard";
+import Participants from "./Participants";
+import EventOwner from "./EventOwner";
+import ClubDashboard from "./ClubDashboard";
+import EventsPage from './EventsPage'
 // Ensure all assets are in the public/assets folder and replace placeholder URLs with actual ones in components.
 
 function App() {
@@ -27,6 +32,11 @@ function App() {
         <Route path="club/:name" element={<ClubPage />} />
         <Route path="/event/:name" element={<EventDetails/>} />
         <Route path="/organize" element={<AddEvent/>} />
+        <Route path="/admin" element={<AdminDashboard/>} />
+        <Route path="/participants" element={<Participants/>} />
+        <Route path="/club/event/:idr" element={<EventOwner/>} />
+        <Route path="/club/dashboard/:name" element={<ClubDashboard/>} />
+        <Route path="/events" element={<EventsPage/>} />
       </Routes>
     </BrowserRouter>
   );

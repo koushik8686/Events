@@ -17,7 +17,7 @@ const Nav = () => {
       const userId = Cookies.get("user");
       if (userId) {
         try {
-          const response = await axios.get(`http://localhost:5000/profile/${userId}`, {
+          const response = await axios.get(`https://events-backend-two.vercel.app/profile/${userId}`, {
           });
           setUserProfile(response.data);
         } catch (error) {
@@ -68,10 +68,10 @@ const Nav = () => {
           {/* Centered Navigation Links */}
           <ul className="mr-24 md:flex space-x-8 text-sm font-medium">
             <li className="hover:text-blue-500 transition duration-300">
-              <a href="/organize">Organize</a>
+              <a href="/club/dashboard/abcd">Organize</a>
             </li>
             <li className="hover:text-blue-500 transition duration-300">
-              <a href="#participate">Participate</a>
+              <a href="/events">Participate</a>
             </li>
           </ul>
 
