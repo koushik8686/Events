@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { EventCard } from './components/EventCard'
 import { Search, Plus, Bell, ChevronDown, Users, CalendarDays, Building2 } from 'lucide-react'
+import AddClubModal from '../forms/AddClub'
 
 // Mock data - replace with actual API calls
 const mockEvents = [
@@ -78,6 +79,7 @@ const mockEvents = [
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('events')
   const [searchQuery, setSearchQuery] = useState('')
+  const [popup, setpopup] = useState(false)
   const [requestCount, setRequestCount] = useState(3) // Example count, replace with actual data
 
   const handleEditEvent = (event) => {
@@ -94,10 +96,11 @@ export default function AdminDashboard() {
     event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     event.category.toLowerCase().includes(searchQuery.toLowerCase())
   )
-
+  const onclose=()=>{setpopup(false);}
   return (
     <div className="min-h-screen bg-[#121212]">
       {/* Header */}
+      <AddClubModal isOpen={popup} onClose={onclose}/>
       <header className="sticky top-0 z-10 border-b border-purple-800/20 bg-[#1A1A1A]">
         <div className="flex items-center justify-between px-6 py-4">
           <h1 className="text-2xl font-bold text-white">EventSphere Admin</h1>
@@ -158,9 +161,9 @@ export default function AdminDashboard() {
             />
           </div>
           
-          <button className="w-full md:w-auto bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md flex items-center justify-center">
+          <button onClick={()=>{setpopup(true)}} className="w-full md:w-auto bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md flex items-center justify-center">
             <Plus className="h-4 w-4 mr-2" />
-            Add Event
+            Add Club
           </button>
         </div>
 
