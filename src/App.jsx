@@ -13,6 +13,7 @@ import Participants from "./Participants";
 import EventOwner from "./EventOwner";
 import ClubDashboard from "./ClubDashboard";
 import EventsPage from './EventsPage'
+import AdminLogin from './admin/login';
 // Ensure all assets are in the public/assets folder and replace placeholder URLs with actual ones in components.
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/club/event/:id" element={<EventOwner/>} />
         <Route path="/club/dashboard/:name" element={<ClubDashboard/>} />
         <Route path="/events" element={<EventsPage/>} />
+        <Route path="/admin/login" element={<AdminLogin />} />
       </Routes>
     </BrowserRouter>
   );
