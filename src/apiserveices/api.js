@@ -32,6 +32,6 @@ export const Apis = {
       console.error('Login error:', error);
       throw error;
     }
-  };
+  }
   
 };
