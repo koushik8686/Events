@@ -16,4 +16,22 @@ export const Apis = {
       },
     }).then(response => response.data);
   },
+
+   async adminlogin (credentials) {
+    try {
+      // Making an API call using Axios
+      const response = await axios.post(`${API_BASE_URL}/admin/login`, credentials);
+  
+      if (response.status !== 200) {
+        throw new Error('Login failed');
+      }
+  
+      const data = response.data;
+      return data;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
+  };
+  
 };

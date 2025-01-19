@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { EventCard } from './components/EventCard'
 import { Search, Plus, Bell, ChevronDown, Users, CalendarDays, Building2 } from 'lucide-react'
 import AddClubModal from '../forms/AddClub'
+import useAuth from '../hooks/useAuth'
 
 // Mock data - replace with actual API calls
 const mockEvents = [
@@ -81,7 +82,7 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState('')
   const [popup, setpopup] = useState(false)
   const [requestCount, setRequestCount] = useState(3) // Example count, replace with actual data
-
+   useAuth({'userType': 'admin'})
   const handleEditEvent = (event) => {
     // Implement edit functionality
     console.log('Edit event:', event)
