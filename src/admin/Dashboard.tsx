@@ -82,7 +82,6 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState('')
   const [popup, setpopup] = useState(false)
   const [requestCount, setRequestCount] = useState(3) // Example count, replace with actual data
-   useAuth({'userType': 'admin'})
   const handleEditEvent = (event) => {
     // Implement edit functionality
     console.log('Edit event:', event)
