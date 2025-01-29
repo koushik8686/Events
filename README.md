@@ -1,10 +1,65 @@
-# 🎉 Event Management Website
+# 🎉 Event Management Website Project
 
-Welcome to the **Event Management Website** repository! This project is a platform to organize and participate in exciting college events. Built using **React** and **Vite**, it features a dynamic user interface, responsive design, and animations to enhance user experience.
+## 📋 Project Overview
 
----
+### Objectives
+The Event Management Website is a comprehensive platform designed to revolutionize event organization and participation within our college community. Our key objectives are to:
+- Centralize event information across different clubs and departments
+- Provide an intuitive and engaging interface for students to discover and participate in events
+- Streamline event management processes for club coordinators
+- Enhance inter-club collaboration and student engagement
 
-## 🌟 Features
+### Live Site: https://eventsphere-beta.vercel.app/
+
+
+
+### 🚀 Project Milestones and Timeline
+
+#### Phase 1: 
+- [x] Project scope definition
+- [x] Initial UI/UX design
+- [x] Technology stack selection
+
+
+#### Phase 2: 
+- Frontend Development
+  - Responsive design implementation
+  - Component creation
+  - Navigation and routing
+
+#### Phase 3: 
+- Comprehensive testing
+- Backend Integration 
+- Initial feature development
+- User feedback incorporation
+
+#### Phase 4:
+- Final documentation
+- Deployment 
+### 👥 Work Division
+<!-- 
+#### Team Member 1 (Frontend Lead)
+- Responsibilities:
+  - UI/UX design
+  - React component development
+  - Responsive design implementation
+- Estimated Time: 40 hours
+
+#### Team Member 2 (Backend/Integration Lead)
+- Responsibilities:
+  - API integration
+  - Data management
+  - Performance optimization
+- Estimated Time: 30 hours
+
+#### Team Member 3 (Design and Content)
+- Responsibilities:
+  - Event content creation
+  - Graphics and visual assets
+  - User experience refinement
+- Estimated Time: 20 hours -->
+
+### 🌟 Features
 
 - 🖌️ **Beautiful Design**: Dark theme with smooth animations.
 - 🛠️ **Dynamic Navigation**: Interactive navbar with organized links.
@@ -13,9 +68,7 @@ Welcome to the **Event Management Website** repository! This project is a platfo
 - 📱 **Responsive Design**: Looks great on all devices.
 - 🚀 **Fast and Efficient**: Powered by Vite for a seamless developer experience.
 
----
-
-## 🚀 Getting Started
+### 🚀 Getting Started
 
 Follow these steps to run the project on your local machine:
 
@@ -69,5 +122,3 @@ Navigate the Website
 
 ### Customize the Project
 Feel free to modify the src folder to add your own events, images, or styles.
-
-   
