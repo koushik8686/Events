@@ -1,6 +1,8 @@
 const API_BASE_URL = 'http://localhost:5000';
 import axios from 'axios';
 
+export const Base_Url = API_BASE_URL
+
 export const Apis = {
   createClub(formData) {
     const data = new FormData();

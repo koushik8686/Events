@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { Base_Url } from "./apiserveices/api";
 
 const Nav = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Nav = () => {
       const userId = Cookies.get("user");
       if (userId) {
         try {
-          const response = await axios.get(`https://events-backend-two.vercel.app/profile/${userId}`, {
+          const response = await axios.get(`${Base_Url}/profile/${userId}`, {
           });
           setUserProfile(response.data);
         } catch (error) {
@@ -32,7 +33,7 @@ const Nav = () => {
   const responseGoogle = async (authResult) => {
     try {
       if (authResult) {
-        const response = await axios.get(`https://events-backend-two.vercel.app/auth/google`, {
+        const response = await axios.get(`${Base_Url}/auth/google`, {
           params: { tokens: authResult },
         });
         if (response.data.message) {
