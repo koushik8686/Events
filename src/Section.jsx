@@ -1,45 +1,28 @@
-import React, { useState , useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./index_r.css";
-import Card from "./Card";
+import React, { useEffect } from 'react'
+import { motion, useAnimation } from 'framer-motion'
+import Card from './Card'
 
-const Section = ({ title, items, color }) => {
+export default function Section({ title, items, color }) {
+  // Decide direction for marquee
+  const isLeftToRight = title.toLowerCase().includes('non-technical') // left to right
+  const controls = useAnimation()
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(3); // Default to 3 items per page
+  // Starts the marquee from its current position; it goes continuously
+  const startMarquee = () => {
+    controls.start({
+      x: isLeftToRight ? ['-50%', '0%'] : ['0%', '-50%'],
+      transition: {
+        repeat: Infinity,
+        duration: 20,
+        ease: 'linear',
+      },
+    })
+  }
 
+  // Begin marquee on mount
   useEffect(() => {
-    // Adjust itemsPerPage based on window width
-    const updateItemsPerPage = () => {
-      if (window.innerWidth < 640) {
-        setItemsPerPage(2); // Small screens
-      } else {
-        setItemsPerPage(3); // Larger screens
-      }
-    };
-
-    updateItemsPerPage(); // Call on component mount
-    window.addEventListener("resize", updateItemsPerPage);
-
-    return () => window.removeEventListener("resize", updateItemsPerPage);
-  }, []);
-
-  const totalPages = Math.ceil(items.length / itemsPerPage);
-
-  const nextPage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
-
-  const startIndex = currentPage * itemsPerPage;
-  const visibleItems = items.slice(startIndex, startIndex + itemsPerPage);
+    startMarquee()
+  }, [])
 
   return (
     <div className="mb-16">
@@ -49,35 +32,30 @@ const Section = ({ title, items, color }) => {
         {title}
       </h2>
 
-      <div className="flex items-center gap-4">
-  {/* Prev Button */}
-  <button
-    onClick={prevPage}
-    disabled={currentPage === 0}
-    className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-6 py-2 rounded-full text-white font-bold shadow-md disabled:opacity-50 hover:scale-105 transition duration-300"
-  >
-    Prev
-  </button>
+      {/* Container with hidden overflow */}
+      <div className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing">
+        {/* Marquee + drag container */}
+        <motion.div
+          className="flex flex-nowrap gap-6 w-max"
+          animate={controls}
+          drag="x"
+          dragConstraints={{ left: -3000, right: 0 }}
+          onDragEnd={() => {
+            // Resume continuous movement afterwards
+            startMarquee()
+          }}
+        >
+          {/* Original items */}
+          {items.map((item, idx) => (
+            <Card key={idx} {...item} />
+          ))}
 
-  {/* Cards Grid */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 flex-1 gap-8">
-    {visibleItems.map((item, index) => (
-      <Card key={index} {...item} />
-    ))}
-  </div>
-
-  {/* Next Button */}
-  <button
-    onClick={nextPage}
-    disabled={currentPage === totalPages - 1}
-    className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-6 py-2 rounded-full text-white font-bold shadow-md disabled:opacity-50 hover:scale-105 transition duration-300"
-  >
-    Next
-  </button>
-</div>
-
+          {/* Duplicate items for seamless loop */}
+          {items.map((item, idx) => (
+            <Card key={`clone-${idx}`} {...item} />
+          ))}
+        </motion.div>
+      </div>
     </div>
-  );
-};
-
-export default Section;
+  )
+}
