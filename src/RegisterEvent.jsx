@@ -9,18 +9,27 @@ const RegisterEvent = ({ eventId, userId }) => {
 
   const registerForEvent = async () => {
     setLoading(true);
+    setMessage(""); // Clear previous messages
+
     try {
       const response = await axios.post(
-        `${Base_Url}/register-event/${eventId}`,
+        `${Base_Url}/register-event`,
+        { eventId, userid: userId },
         {
-          // eventId: eventId,
-          userid: userId,
+          headers: {
+            "Content-Type": "application/json", // Ensure JSON format
+          },
         }
       );
 
-      setMessage("Registered successfully!");
+      if (response.status === 200) {
+        setMessage("Registered successfully!");
+      } else {
+        setMessage("Failed to register. Please try again.");
+      }
     } catch (error) {
       setMessage("Failed to register. Please try again.");
+      console.error("Error registering:", error);
     } finally {
       setLoading(false);
     }
