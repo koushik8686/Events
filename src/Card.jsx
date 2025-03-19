@@ -13,24 +13,7 @@ const Card = ({ name, description, image, link }) => {
   };
 
  // Animation animate-fadeInUp on scroll . Also IntersectionObserver API is used to trigger the animation
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.intersectionRatio > 0.2 && !cardRef.current?.classList.contains("animate-fadeInUp")) {
-          cardRef.current?.classList.add("animate-fadeInUp");
-        } else if (entry.intersectionRatio === 0) {
-          cardRef.current?.classList.remove("animate-fadeInUp");
-        }
-      });
-    }, {
-      threshold: [0, 0.2, 1],
-    });
-  
-    if (cardRef.current) observer.observe(cardRef.current);
-    return () => {
-      if (cardRef.current) observer.unobserve(cardRef.current);
-    };
-  }, []);
+ 
 
   return (
     <div className="relative" ref={cardRef}>

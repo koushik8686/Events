@@ -5,52 +5,44 @@ import Section from "./Section";
 import { technicalClubs, nonTechnicalClubs, sportsClubs } from "./data/clubData";
 
 const SecondPg = () => {
-    return (
-      <div className="relative text-white py-16">
-        {/* Background Animations */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Rotating Elements */}
-          <div className="absolute w-40 h-40 bg-transparent border-4 border-indigo-500 rounded-full animate-spin-slow top-10 left-10 hidden lg:block">
-          <div className="w-4 h-4 bg-indigo-500 rounded-full"></div>
-          </div>
-          <div className="absolute w-24 h-24 bg-transparent border-4 border-pink-500 rounded-full animate-spin-reverse-slow top-40 right-20 hidden lg:block">
-            <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-          </div>
-          <div className="absolute w-40 h-40 bg-transparent border-4 border-indigo-500 rounded-full animate-spin-slow bottom-10 left-20 hidden lg:block">
-            <div className="w-4 h-4 bg-indigo-500 rounded-full"></div>
-          </div>
-        </div>
+  return (
   
+    <div className="min-h-screen w-full bg-purple-900 flex items-center justify-center py-8">
+      {/* Box container with gradient */}
+
+      <div className="max-w-6xl w-full mx-4 md:mx-8 p-8 rounded-lg shadow-xl bg-gradient-to-br from-purple-500 via-purple-800 to-purple-500">
         {/* Page Header */}
         <header className="py-8 text-center">
-          <h1 className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-purple-500 animate-pulse">
+          <h1 className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-indigo-400 animate-pulse">
             Discover Our Clubs & Activities
           </h1>
           <p className="mt-4 text-gray-300">
             Learn more about our technical, non-technical, and sports clubs!
           </p>
         </header>
-  
+        
         {/* Content */}
         <div className="px-8 relative z-10 w-100">
+          {/* example usage of the Section component */}
           <Section
             title="Technical Clubs"
-            items={technicalClubs}
+            items={technicalClubs }
             color="from-green-400 to-blue-500"
           />
           <Section
             title="Non-Technical Clubs"
-            items={nonTechnicalClubs}
+            items={ nonTechnicalClubs }
             color="from-purple-400 to-pink-500"
           />
           <Section
             title="Sports"
-            items={sportsClubs}
-            color="from-yellow-400 to-red-500"
+            items={ sportsClubs }
+            color="from-blue-400 to-green-500"
           />
         </div>
       </div>
-    );
+    </div>
+  )
   };
   
    // Reusing Section and Card components from Card.jsx and Section.jsx . Data from clubData.js is used to populate the sections here and then in section.jsx we use this data to populate the cards
