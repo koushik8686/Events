@@ -1,17 +1,67 @@
-import React, { useState } from 'react'
-import { Calendar, Clock, MapPin, Users, Phone, DollarSign, Search, Filter, LogOut } from 'lucide-react'
+import React, { useState, useEffect } from "react";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  Phone,
+  DollarSign,
+  Search,
+  Filter,
+  LogOut,
+} from "lucide-react";
+import { Apis } from "./apiserveices/api";
 
 export default function EventsPage() {
-  const [activeTab, setActiveTab] = useState("upcoming")
+  const [activeTab, setActiveTab] = useState("upcoming");
+  const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const fetchedEvents = await Apis.fetchEvents();
+
+        // Ensure fetchedEvents is an array
+        const safeEvents = Array.isArray(fetchedEvents) ? fetchedEvents : [];
+
+        setEvents(safeEvents);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error loading events:", error);
+        setError("Failed to load events");
+        setEvents([]);
+        setIsLoading(false);
+      }
+    };
+    loadEvents();
+  }, []);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-xl">Loading events...</div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-xl text-red-500">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navbar */}
       <nav className="bg-black/50 backdrop-blur-lg border-b border-white/10 py-4 sticky top-0 z-50">
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="text-2xl font-bold ">
-            EventSphere
-          </div>
+          <div className="text-2xl font-bold ">EventSphere</div>
           <button className="px-4 py-2 text-white hover:text-purple-400 flex items-center">
             <LogOut className="w-4 h-4 mr-2" />
             Logout
@@ -22,21 +72,23 @@ export default function EventsPage() {
       {/* Hero Section */}
       <section className="relative h-[40vh] min-h-[400px] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-purple-600/20" />
-        <div 
+        <div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070")',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            opacity: 0.3
+            backgroundImage:
+              'url("https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070")',
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            opacity: 0.3,
           }}
         />
         <div className="relative container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-purple-600 to-purple-400 bg-clip-text text-transparent">
-            Discover  Events
+            Discover Events
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Join exciting events, competitions, and festivals happening around your campus
+            Join exciting events, competitions, and festivals happening around
+            your campus
           </p>
           <div className="flex flex-col md:flex-row gap-4 max-w-3xl mx-auto backdrop-blur-lg bg-white/5 p-4 rounded-lg">
             <div className="relative flex-1">
@@ -70,17 +122,21 @@ export default function EventsPage() {
             <div className="flex bg-white/5 rounded-md p-1">
               <button
                 className={`flex-1 px-4 py-2 rounded-md transition-colors duration-200 ease-in-out ${
-                  activeTab === 'upcoming' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'
+                  activeTab === "upcoming"
+                    ? "bg-purple-600 text-white"
+                    : "text-gray-400 hover:text-white"
                 }`}
-                onClick={() => setActiveTab('upcoming')}
+                onClick={() => setActiveTab("upcoming")}
               >
                 Upcoming Events
               </button>
               <button
                 className={`flex-1 px-4 py-2 rounded-md transition-colors duration-200 ease-in-out ${
-                  activeTab === 'past' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'
+                  activeTab === "past"
+                    ? "bg-purple-600 text-white"
+                    : "text-gray-400 hover:text-white"
                 }`}
-                onClick={() => setActiveTab('past')}
+                onClick={() => setActiveTab("past")}
               >
                 Past Events
               </button>
@@ -93,35 +149,43 @@ export default function EventsPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events
-            .filter(event => event.status === activeTab)
+            .filter((event) => event.status === activeTab)
             .map((event) => (
-              <EventCard key={event.id} {...event} />
+              <EventCard
+                key={event._id || event.id || Math.random()}
+                event={event}
+              />
             ))}
         </div>
       </section>
     </div>
-  )
+  );
 }
 
-function EventCard({
-  title,
-  description,
-  date,
-  time,
-  venue,
-  teamSize,
-  contact,
-  price,
-  prize,
-  categories,
-  image,
-  status,
-}) {
+function EventCard({ event }) {
+  // Add null checks in the component
+  if (!event) return null;
+
+  const {
+    title = "Untitled Event",
+    description = "No description available",
+    date = "TBA",
+    time = "TBA",
+    venue = "Location not specified",
+    teamSize = "N/A",
+    contact = "Contact not available",
+    price = 0,
+    prize = 0,
+    categories = [],
+    image = "/placeholder.svg",
+    status = "upcoming",
+  } = event;
+
   return (
     <div className="bg-white/5 border border-white/10 rounded-lg overflow-hidden group hover:bg-white/10 transition-all duration-300 hover:scale-[1.02]">
       <div className="relative h-48 w-full overflow-hidden">
-        <img 
-          src={image || "/placeholder.svg"}
+        <img
+          src={image}
           alt={title}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
@@ -143,7 +207,9 @@ function EventCard({
         </div>
       </div>
       <div className="p-6">
-        <h3 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors">{title}</h3>
+        <h3 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors">
+          {title}
+        </h3>
         <p className="text-gray-400 text-sm mb-4 line-clamp-2">{description}</p>
         {prize > 0 && (
           <div className="flex items-center gap-2 text-yellow-500 mb-4">
@@ -175,97 +241,19 @@ function EventCard({
           <Phone className="w-4 h-4" />
           <span>{contact}</span>
         </div>
-        <button 
+        <button
           className={`px-4 py-2 rounded-md font-medium transition-all duration-300 ${
             status === "upcoming"
               ? "bg-purple-600 text-white hover:bg-purple-700 hover:scale-105"
               : "bg-gray-600 text-gray-300 cursor-not-allowed opacity-50"
           }`}
           disabled={status === "past"}
-        ><a href="/event/abcd">
-                    {status === "upcoming" ? "Register Now" : "Event Ended"}
-         </a>
+        >
+          <a href="/event/abcd">
+            {status === "upcoming" ? "Register Now" : "Event Ended"}
+          </a>
         </button>
       </div>
     </div>
-  )
+  );
 }
-
-const events = [
-  {
-    id: 1,
-    title: "Hackathon 2024",
-    description: "Join us for a 24-hour coding marathon where teams compete to build innovative solutions. Great prizes, amazing networking opportunities!",
-    date: "Mar 15, 2024",
-    time: "09:00 AM",
-    venue: "Main Auditorium, Tech Campus",
-    teamSize: 4,
-    contact: "+1 (555) 123-4567",
-    price: 50,
-    prize: 5000,
-    categories: ["Technical"],
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1000",
-    status: "upcoming"
-  },
-  {
-    id: 2,
-    title: "Inter-College Sports Festival",
-    description: "A grand sports event featuring multiple disciplines. Compete with the best athletes from colleges across the region!",
-    date: "Apr 20, 2024",
-    time: "08:00 AM",
-    venue: "University Sports Complex",
-    teamSize: 10,
-    contact: "+1 (555) 987-6543",
-    price: 100,
-    prize: 10000,
-    categories: ["Sports"],
-    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=1000",
-    status: "upcoming"
-  },
-  {
-    id: 3,
-    title: "Cultural Night 2024",
-    description: "Experience an evening of music, dance, and drama performances by talented artists from various colleges.",
-    date: "May 5, 2024",
-    time: "06:00 PM",
-    venue: "College Amphitheater",
-    teamSize: 1,
-    contact: "+1 (555) 246-8135",
-    price: 0,
-    prize: 0,
-    categories: ["Cultural"],
-    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=1000",
-    status: "upcoming"
-  },
-  {
-    id: 4,
-    title: "Tech Symposium 2023",
-    description: "A past event that showcased the latest advancements in technology with keynote speakers from leading tech companies.",
-    date: "Nov 10, 2023",
-    time: "10:00 AM",
-    venue: "Virtual Event",
-    teamSize: 1,
-    contact: "+1 (555) 369-2580",
-    price: 25,
-    prize: 0,
-    categories: ["Technical"],
-    image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&q=80&w=1000",
-    status: "past"
-  },
-  {
-    id: 5,
-    title: "Annual Chess Tournament 2023",
-    description: "The biggest chess event of the year that brought together the brightest minds from various colleges.",
-    date: "Dec 5, 2023",
-    time: "09:00 AM",
-    venue: "Central Library",
-    teamSize: 1,
-    contact: "+1 (555) 147-2589",
-    price: 10,
-    prize: 2000,
-    categories: ["Sports"],
-    image: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&q=80&w=1000",
-    status: "past"
-  }
-]
-
