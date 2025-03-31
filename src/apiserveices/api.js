@@ -47,20 +47,20 @@ export const Apis = {
       console.log(response);
       // Convert to array
       const eventsData = response.data;
-      if (Array.isArray(eventsData)) {
-        return eventsData;
-      }
-      if (eventsData.events && Array.isArray(eventsData.events)) {
-        return eventsData.events;
-      }
-      if (eventsData && typeof eventsData === "object") {
-        return [eventsData];
-      }
-
-      return [];
+      return eventsData;
     } catch (error) {
       console.error("Error fetching events:", error);
       return []; // Return an empty array in case of error
     }
   },
+  
+  async acceptEvent(eventId) {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/events/${eventId}/accept`)
+      return response.data
+    } catch (error) {
+      console.error('Error accepting event:', error)
+      throw error
+    }
+  }
 };

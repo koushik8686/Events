@@ -1,52 +1,22 @@
 import React from 'react'
 import { Calendar, MapPin, Users, DollarSign, Star, Clock, Trophy, Phone } from 'lucide-react'
+import { Apis } from '../../apiserveices/api'
 
-interface Club {
-  name: string
-  logo: string
-}
-
-interface Rating {
-  user: string
-  name: string
-  rating: number
-  comment: string
-  createdAt: Date
-}
-
-interface Event {
-  _id: string
-  title: string
-  description: string
-  imageUrl: string
-  clubs: Club[]
-  date: Date
-  time: string
-  venue: string
-  isTeamEvent: boolean
-  teamSize?: number
-  prizeMoney: number
-  isPaid: boolean
-  amount?: number
-  category: string
-  contactInfo: string
-  participants: string[]
-  remarks: string[]
-  ratings: Rating[]
-  createdAt: Date
-  updatedAt: Date
-}
-
-interface EventCardProps {
-  event: Event
-  onEdit: (event: Event) => void
-  onDelete: (eventId: string) => void
-}
-
-export function EventCard({ event, onEdit, onDelete }: EventCardProps) {
-  const averageRating = event.ratings.length 
+export function EventCard({ event, onEdit, onDelete }) {
+  const averageRating = event.ratings?.length
     ? (event.ratings.reduce((acc, curr) => acc + curr.rating, 0) / event.ratings.length).toFixed(1)
     : 0
+
+  const handleAcceptEvent = async () => {
+    try {
+      const response = await Apis.acceptEvent(event._id) // Assuming `acceptEvent` is defined in your API services
+      console.log('Event accepted:', response)
+      alert('Event has been accepted successfully!')
+    } catch (error) {
+      console.error('Error accepting event:', error)
+      alert('Failed to accept the event.')
+    }
+  }
 
   return (
     <div className="bg-[#1E1E1E] rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02]">
@@ -78,7 +48,7 @@ export function EventCard({ event, onEdit, onDelete }: EventCardProps) {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-white">{event.title}</h3>
           <div className="flex -space-x-2">
-            {event.clubs.map((club, index) => (
+            {event.clubs?.map((club, index) => (
               <div key={index} className="relative group">
                 <img
                   src={club.logo || "/placeholder.svg"}
@@ -101,20 +71,20 @@ export function EventCard({ event, onEdit, onDelete }: EventCardProps) {
           <div className="flex items-center text-gray-400">
             <Calendar className="h-4 w-4 mr-2 text-purple-500" />
             <span className="text-xs">
-  {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
-</span>
+              {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
+            </span>
           </div>
-          
+
           <div className="flex items-center text-gray-400">
             <Clock className="h-4 w-4 mr-2 text-purple-500" />
             <span className="text-xs">{event.time}</span>
           </div>
-          
+
           <div className="flex items-center text-gray-400">
             <MapPin className="h-4 w-4 mr-2 text-purple-500" />
             <span className="text-xs">{event.venue}</span>
           </div>
-          
+
           <div className="flex items-center text-gray-400">
             <Users className="h-4 w-4 mr-2 text-purple-500" />
             <span className="text-xs">
@@ -136,24 +106,6 @@ export function EventCard({ event, onEdit, onDelete }: EventCardProps) {
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-purple-500/10">
-        <a href="/participants">
-        <div className="flex items-center gap-2">
-            <div className="flex -space-x-2">
-              {[...Array(Math.min(3, event.participants.length))].map((_, i) => (
-                <div
-                  key={i}
-                  className="w-6 h-6 rounded-full bg-purple-500/20 border-2 border-[#1E1E1E] flex items-center justify-center"
-                >
-                  <span className="text-[10px] text-purple-400">P{i + 1}</span>
-                </div>
-              ))}
-            </div>
-            <span className="text-xs text-gray-400">
-              {event.participants.length} Participants
-            </span>
-          </div>
-        </a>
-
           <div className="flex gap-2">
             <button
               onClick={() => onEdit(event)}
@@ -168,9 +120,14 @@ export function EventCard({ event, onEdit, onDelete }: EventCardProps) {
               Delete
             </button>
           </div>
+          <button
+            onClick={handleAcceptEvent}
+            className="px-3 py-1 text-sm bg-green-500/10 text-green-400 rounded-md hover:bg-green-500/20 transition-colors"
+          >
+            Accept
+          </button>
         </div>
       </div>
     </div>
   )
 }
-

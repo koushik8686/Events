@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Make sure to install axios if you haven't already
 import { 
   Calendar,
   Clock,
@@ -14,6 +15,8 @@ import {
   LogOut
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Base_Url } from './apiserveices/api';
+
 // Mock data for events
 const events = {
   upcoming: [
@@ -94,10 +97,32 @@ const clubStats = [
   { label: "Active Members", value: "150+" },
   { label: "Years Active", value: "5" }
 ];
+
 function ClubDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('upcoming');
   const [showNav, setShowNav] = useState(false);
+  
+  // New states for the event modal and form
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [eventForm, setEventForm] = useState({
+    title: '',
+    event_type: 'Technical', // Default value
+    description: '',
+    date: '',
+    time: '',
+    venue: '',
+    isTeamEvent: false,
+    teamSize: 1,
+    prizeMoney: 0,
+    isPaid: false,
+    amount: 0,
+    contactInfo: '',
+    image: null
+  });
+  const [imagePreview, setImagePreview] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -127,6 +152,112 @@ function ClubDashboard() {
     });
 
     return grouped;
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setEventForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Preview the image
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setEventForm(prev => ({ ...prev, image: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const resetForm = () => {
+    setEventForm({
+      title: '',
+      event_type: 'Technical',
+      description: '',
+      date: '',
+      time: '',
+      venue: '',
+      isTeamEvent: false,
+      teamSize: 1,
+      prizeMoney: 0,
+      isPaid: false,
+      amount: 0,
+      contactInfo: '',
+      image: null
+    });
+    setImagePreview('');
+    setErrorMessage('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!eventForm.title || !eventForm.description || !eventForm.date || 
+        !eventForm.time || !eventForm.venue || !eventForm.contactInfo || !eventForm.image) {
+      setErrorMessage('Please fill all required fields and upload an image');
+      return;
+    }
+    
+    try {
+      setIsSubmitting(true);
+      
+      // Format the data according to the backend API requirements
+      const eventData = {
+        title: eventForm.title,
+        description: eventForm.description, 
+        image: eventForm.image,
+        date: eventForm.date,
+        time: eventForm.time,
+        venue: eventForm.venue,
+        isTeamEvent: eventForm.isTeamEvent,
+        teamSize: eventForm.isTeamEvent ? eventForm.teamSize : 1,
+        prizeMoney: eventForm.prizeMoney || 0,
+        isPaid: eventForm.isPaid,
+        amount: eventForm.isPaid ? eventForm.amount : 0,
+        event_type: eventForm.event_type,
+        contactInfo: eventForm.contactInfo
+      };
+      
+      console.log('Sending event data:', eventData);
+      
+      // Explicitly set content type and handle large payloads
+      const response = await axios.post(Base_Url+'/events', eventData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        maxContentLength: 50 * 1024 * 1024, // 50MB
+        maxBodyLength: 50 * 1024 * 1024, // 50MB
+      });
+      
+      console.log('Event created:', response.data);
+      
+      // Close the modal and reset the form
+      setShowEventModal(false);
+      resetForm();
+      
+    } catch (error) {
+      console.error('Error creating event:', error);
+      
+      // More detailed error message
+      if (error.response) {
+        console.error('Server response error:', error.response.data);
+        setErrorMessage(`Failed to create event: ${error.response.data.error || 'Server error'}`);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+        setErrorMessage('Failed to create event: No response from server');
+      } else {
+        setErrorMessage(`Failed to create event: ${error.message}`);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderEventCard = (event) => (
@@ -227,20 +358,22 @@ function ClubDashboard() {
             </button>
           </div>
           <nav className="space-y-4">
-            <button className="w-full flex items-center gap-3 px-4 py-2 text-left rounded-lg bg-purple-600 hover:bg-purple-700 transition-colors">
+            <button 
+              onClick={() => setShowEventModal(true)}
+              className="w-full flex items-center gap-3 px-4 py-2 text-left rounded-lg bg-purple-600 hover:bg-purple-700 transition-colors"
+            >
               <Plus className="w-5 h-5" />
               Add Event
             </button>
             
             <Link
-  className="w-full flex items-center gap-3 px-4 py-2 text-left rounded-lg text-white-400 hover:bg-slate-600 transition-colors"
-  to="/"
->
-  <LogOut className="w-5 h-5" />
-  Back
-</Link>
+              className="w-full flex items-center gap-3 px-4 py-2 text-left rounded-lg text-white-400 hover:bg-slate-600 transition-colors"
+              to="/"
+            >
+              <LogOut className="w-5 h-5" />
+              Back
+            </Link>
 
-         
             <button className="w-full flex items-center gap-3 px-4 py-2 text-left rounded-lg text-red-400 hover:bg-red-950 transition-colors">
               <LogOut className="w-5 h-5" />
               Log Out
@@ -327,6 +460,243 @@ function ClubDashboard() {
           ))}
         </main>
       </div>
+
+      {/* Event Creation Modal */}
+      {showEventModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-[#1a1a1a] rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Create New Event</h2>
+                <button onClick={() => {setShowEventModal(false); resetForm();}} className="text-gray-400 hover:text-white">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              
+              {errorMessage && (
+                <div className="bg-red-900/50 border border-red-500 text-red-200 p-3 rounded-lg mb-4">
+                  {errorMessage}
+                </div>
+              )}
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Title */}
+                  <div className="col-span-full">
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Event Title *</label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={eventForm.title}
+                      onChange={handleInputChange}
+                      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Event Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Event Type</label>
+                    <select
+                      name="event_type"
+                      value={eventForm.event_type}
+                      onChange={handleInputChange}
+                      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                    >
+                      <option value="Technical">Technical</option>
+                      <option value="Cultural">Cultural</option>
+                      <option value="Sports">Sports</option>
+                      <option value="Workshop">Workshop</option>
+                      <option value="Competition">Competition</option>
+                      <option value="Seminar">Seminar</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  
+                  {/* Date */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Date *</label>
+                    <input
+                      type="date"
+                      name="date"
+                      value={eventForm.date}
+                      onChange={handleInputChange}
+                      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Time */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Time *</label>
+                    <input
+                      type="time"
+                      name="time"
+                      value={eventForm.time}
+                      onChange={handleInputChange}
+                      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Venue */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Venue *</label>
+                    <input
+                      type="text"
+                      name="venue"
+                      value={eventForm.venue}
+                      onChange={handleInputChange}
+                      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Contact Info */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Contact Info *</label>
+                    <input
+                      type="text"
+                      name="contactInfo"
+                      value={eventForm.contactInfo}
+                      onChange={handleInputChange}
+                      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      required
+                      placeholder="Phone number or email"
+                    />
+                  </div>
+                  
+                  {/* Team Event Toggle */}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="isTeamEvent"
+                        name="isTeamEvent"
+                        checked={eventForm.isTeamEvent}
+                        onChange={handleInputChange}
+                        className="w-4 h-4 text-purple-600 bg-[#2a2a2a] border-[#3a3a3a] rounded"
+                      />
+                      <label htmlFor="isTeamEvent" className="text-sm font-medium text-gray-300">Team Event</label>
+                    </div>
+                  </div>
+                  
+                  {/* Team Size (conditional) */}
+                  {eventForm.isTeamEvent && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">Team Size</label>
+                      <input
+                        type="number"
+                        name="teamSize"
+                        value={eventForm.teamSize}
+                        onChange={handleInputChange}
+                        min="2"
+                        max="20"
+                        className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Prize Money */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Prize Money ($)</label>
+                    <input
+                      type="number"
+                      name="prizeMoney"
+                      value={eventForm.prizeMoney}
+                      onChange={handleInputChange}
+                      min="0"
+                      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                    />
+                  </div>
+                  
+                  {/* Paid Event Toggle */}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="isPaid"
+                        name="isPaid"
+                        checked={eventForm.isPaid}
+                        onChange={handleInputChange}
+                        className="w-4 h-4 text-purple-600 bg-[#2a2a2a] border-[#3a3a3a] rounded"
+                      />
+                      <label htmlFor="isPaid" className="text-sm font-medium text-gray-300">Paid Event</label>
+                    </div>
+                  </div>
+                  
+                  {/* Amount (conditional) */}
+                  {eventForm.isPaid && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">Amount ($)</label>
+                      <input
+                        type="number"
+                        name="amount"
+                        value={eventForm.amount}
+                        onChange={handleInputChange}
+                        min="1"
+                        className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Description */}
+                  <div className="col-span-full">
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Description *</label>
+                    <textarea
+                      name="description"
+                      value={eventForm.description}
+                      onChange={handleInputChange}
+                      rows="4"
+                      className="w-full bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      required
+                    ></textarea>
+                  </div>
+                  
+                  {/* Image Upload */}
+                  <div className="col-span-full">
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Event Image *</label>
+                    <div className="flex flex-col gap-4">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white"
+                      />
+                      {imagePreview && (
+                        <div className="mt-2">
+                          <img 
+                            src={imagePreview} 
+                            alt="Event Preview" 
+                            className="h-48 w-auto object-cover rounded-lg" 
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-end gap-4 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {setShowEventModal(false); resetForm();}}
+                    className="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    {isSubmitting ? 'Creating...' : 'Create Event'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
