@@ -1,20 +1,35 @@
-'use client'
+"use client";
 
-import { motion } from "framer-motion"
-import { MapPin, Phone, Mail, User, Star, StarIcon, Calendar, Clock, Users, Trophy, DollarSign, Building } from 'lucide-react'
-import { useState, useTransition } from 'react'
+import RegisterEvent from "./RegisterEvent";
+import { motion } from "framer-motion";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  User,
+  Star,
+  StarIcon,
+  Calendar,
+  Clock,
+  Users,
+  Trophy,
+  DollarSign,
+  Building,
+} from "lucide-react";
+import { useState, useTransition } from "react";
 
 // Sample event data matching MongoDB schema
 const eventDetails = {
   title: "Tech Conference 2024",
   event_type: "Conference",
-  description: "Join us for the biggest tech conference of the year, featuring industry leaders, innovative workshops, and networking opportunities.",
+  description:
+    "Join us for the biggest tech conference of the year, featuring industry leaders, innovative workshops, and networking opportunities.",
   clubs: [
     {
       _id: "1",
       name: "Tech Club",
-      imageUrl: "/assets/epoch.jpg"
-    }
+      imageUrl: "/assets/epoch.jpg",
+    },
   ],
   imageUrl: "",
   date: new Date("2024-03-15"),
@@ -28,74 +43,77 @@ const eventDetails = {
   category: "Technology",
   contactInfo: "+1 (555) 123-4567",
   status: "upcoming",
-  about: "A comprehensive tech conference covering the latest trends in technology.",
+  about:
+    "A comprehensive tech conference covering the latest trends in technology.",
   timeline: [
     {
       time: "10:00 AM",
       speaker: "Sarah Johnson",
       topic: "Future of AI",
-      description: "Exploring the latest developments in artificial intelligence"
+      description:
+        "Exploring the latest developments in artificial intelligence",
     },
     {
       time: "2:00 PM",
       speaker: "Michael Chen",
       topic: "Web3 Technologies",
-      description: "Understanding blockchain and decentralized applications"
-    }
+      description: "Understanding blockchain and decentralized applications",
+    },
   ],
   ratings: [
     {
       name: "John Doe",
       profile: "/placeholder.svg?height=40&width=40",
       rating: 5,
-      comment: "Amazing conference! The speakers were incredibly knowledgeable.",
-      createdAt: new Date("2024-01-15")
+      comment:
+        "Amazing conference! The speakers were incredibly knowledgeable.",
+      createdAt: new Date("2024-01-15"),
     },
     {
       name: "Jane Smith",
       profile: "/placeholder.svg?height=40&width=40",
       rating: 4,
       comment: "Great networking opportunities. Would definitely attend again.",
-      createdAt: new Date("2024-01-14")
-    }
+      createdAt: new Date("2024-01-14"),
+    },
   ],
   prices: ["Early Bird: $80", "Regular: $100", "VIP: $150"],
-  remarks: ["Bring your laptop", "Certificate provided", "Lunch included"]
-}
+  remarks: ["Bring your laptop", "Certificate provided", "Lunch included"],
+};
 
 export default function EventDetails() {
-  const [isPending, startTransition] = useTransition()
-  const [rating, setRating] = useState(0)
-  const [comment, setComment] = useState("")
-  const [name, setName] = useState("")
-  const [ratings, setRatings] = useState(eventDetails.ratings)
-  const [error, setError] = useState("")
+  const [isPending, startTransition] = useTransition();
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [name, setName] = useState("");
+  const [ratings, setRatings] = useState(eventDetails.ratings);
+  const [error, setError] = useState("");
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
 
     if (!rating) {
-      setError("Please select a rating")
-      return
+      setError("Please select a rating");
+      return;
     }
 
     if (!comment.trim()) {
-      setError("Please enter a comment")
-      return
+      setError("Please enter a comment");
+      return;
     }
 
     if (!name.trim()) {
-      setError("Please enter your name")
-      return
+      setError("Please enter your name");
+      return;
     }
 
     startTransition(() => {
@@ -104,15 +122,15 @@ export default function EventDetails() {
         profile: "/placeholder.svg?height=40&width=40",
         rating,
         comment,
-        createdAt: new Date()
-      }
+        createdAt: new Date(),
+      };
 
-      setRatings([newRating, ...ratings])
-      setComment("")
-      setName("")
-      setRating(0)
-    })
-  }
+      setRatings([newRating, ...ratings]);
+      setComment("");
+      setName("");
+      setRating(0);
+    });
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -124,7 +142,7 @@ export default function EventDetails() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-        
+
         <div className="absolute bottom-0 w-full">
           <div className="max-w-4xl mx-auto px-4 sm:px-8 py-12">
             <motion.div
@@ -135,12 +153,12 @@ export default function EventDetails() {
               <div className="flex gap-2">
                 {eventDetails.clubs.map((club) => (
                   <a key={club._id} href={`/club/${club.name}`}>
-                  <img
-                    key={club._id}
-                    src={club.imageUrl || "/placeholder.svg"}
-                    alt={club.name}
-                    className="h-12 w-12 object-cover rounded-full border-2 border-purple-500"
-                  />
+                    <img
+                      key={club._id}
+                      src={club.imageUrl || "/placeholder.svg"}
+                      alt={club.name}
+                      className="h-12 w-12 object-cover rounded-full border-2 border-purple-500"
+                    />
                   </a>
                 ))}
               </div>
@@ -179,7 +197,9 @@ export default function EventDetails() {
               <div className="p-6 rounded-xl bg-white/5 backdrop-blur-sm space-y-2">
                 <Users className="h-6 w-6 text-purple-500" />
                 <h3 className="font-semibold text-purple-500">Team Event</h3>
-                <p className="text-gray-300">Team Size: {eventDetails.teamSize}</p>
+                <p className="text-gray-300">
+                  Team Size: {eventDetails.teamSize}
+                </p>
               </div>
             )}
             {eventDetails.prizeMoney > 0 && (
@@ -204,7 +224,9 @@ export default function EventDetails() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-4"
           >
-            <h2 className="text-2xl font-semibold text-purple-500">About the Event</h2>
+            <h2 className="text-2xl font-semibold text-purple-500">
+              About the Event
+            </h2>
             <p className="text-gray-300 leading-relaxed">
               {eventDetails.about || eventDetails.description}
             </p>
@@ -216,17 +238,21 @@ export default function EventDetails() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
-            <h2 className="text-2xl font-semibold text-purple-500">Event Timeline</h2>
+            <h2 className="text-2xl font-semibold text-purple-500">
+              Event Timeline
+            </h2>
             <div className="space-y-6">
               {eventDetails.timeline.map((item, index) => (
-                <div 
+                <div
                   key={index}
                   className="p-6 rounded-xl bg-white/5 backdrop-blur-sm space-y-3"
                 >
                   <div className="flex items-center gap-3">
                     <User className="h-5 w-5 text-purple-500" />
                     <div>
-                      <h3 className="text-purple-500 font-semibold">{item.speaker}</h3>
+                      <h3 className="text-purple-500 font-semibold">
+                        {item.speaker}
+                      </h3>
                       <p className="text-sm text-gray-400">{item.topic}</p>
                     </div>
                   </div>
@@ -246,10 +272,15 @@ export default function EventDetails() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-4"
             >
-              <h2 className="text-2xl font-semibold text-purple-500">Ticket Prices</h2>
+              <h2 className="text-2xl font-semibold text-purple-500">
+                Ticket Prices
+              </h2>
               <ul className="grid gap-3">
                 {eventDetails.prices.map((price, index) => (
-                  <li key={index} className="flex items-center gap-3 text-gray-300">
+                  <li
+                    key={index}
+                    className="flex items-center gap-3 text-gray-300"
+                  >
                     <div className="h-2 w-2 rounded-full bg-purple-500 flex-shrink-0" />
                     {price}
                   </li>
@@ -265,10 +296,15 @@ export default function EventDetails() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-4"
             >
-              <h2 className="text-2xl font-semibold text-purple-500">Important Remarks</h2>
+              <h2 className="text-2xl font-semibold text-purple-500">
+                Important Remarks
+              </h2>
               <ul className="grid gap-3">
                 {eventDetails.remarks.map((remark, index) => (
-                  <li key={index} className="flex items-center gap-3 text-gray-300">
+                  <li
+                    key={index}
+                    className="flex items-center gap-3 text-gray-300"
+                  >
                     <div className="h-2 w-2 rounded-full bg-purple-500 flex-shrink-0" />
                     {remark}
                   </li>
@@ -283,7 +319,9 @@ export default function EventDetails() {
             animate={{ opacity: 1, y: 0 }}
             className="rounded-xl bg-white/5 backdrop-blur-sm p-6 space-y-4"
           >
-            <h2 className="text-2xl font-semibold text-purple-500">Contact Information</h2>
+            <h2 className="text-2xl font-semibold text-purple-500">
+              Contact Information
+            </h2>
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-gray-300">
                 <Phone className="h-5 w-5 text-purple-500" />
@@ -298,10 +336,15 @@ export default function EventDetails() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            <h2 className="text-2xl font-semibold text-purple-500">Comments & Ratings</h2>
-            
+            <h2 className="text-2xl font-semibold text-purple-500">
+              Comments & Ratings
+            </h2>
+
             {/* Comment Form */}
-            <form onSubmit={handleSubmit} className="space-y-6 rounded-xl bg-white/5 backdrop-blur-sm p-6">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-6 rounded-xl bg-white/5 backdrop-blur-sm p-6"
+            >
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-300">
                   Rating
@@ -316,7 +359,9 @@ export default function EventDetails() {
                     >
                       <StarIcon
                         className={`h-6 w-6 ${
-                          star <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-400'
+                          star <= rating
+                            ? "text-yellow-400 fill-yellow-400"
+                            : "text-gray-400"
                         }`}
                       />
                     </button>
@@ -350,16 +395,14 @@ export default function EventDetails() {
                 />
               </div>
 
-              {error && (
-                <p className="text-red-500 text-sm">{error}</p>
-              )}
+              {error && <p className="text-red-500 text-sm">{error}</p>}
 
               <button
                 type="submit"
                 disabled={isPending}
                 className="w-full px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition duration-300 disabled:opacity-50"
               >
-                {isPending ? 'Submitting...' : 'Submit Comment'}
+                {isPending ? "Submitting..." : "Submit Comment"}
               </button>
             </form>
 
@@ -381,13 +424,17 @@ export default function EventDetails() {
                         className="h-10 w-10 rounded-full object-cover"
                       />
                       <div className="space-y-1">
-                        <h3 className="font-semibold text-purple-500">{rating.name}</h3>
+                        <h3 className="font-semibold text-purple-500">
+                          {rating.name}
+                        </h3>
                         <div className="flex gap-1">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <StarIcon
                               key={i}
                               className={`h-4 w-4 ${
-                                i < rating.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-400'
+                                i < rating.rating
+                                  ? "text-yellow-400 fill-yellow-400"
+                                  : "text-gray-400"
                               }`}
                             />
                           ))}
@@ -404,19 +451,9 @@ export default function EventDetails() {
             </div>
           </motion.section>
 
-          {/* Register Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full flex justify-center mt-12"
-          >
-            <button className="px-8 py-3 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition duration-300">
-              Register Now
-            </button>
-          </motion.div>
+          <RegisterEvent eventId={1234} userId={1234} />
         </div>
       </div>
     </div>
-  )
+  );
 }
-
